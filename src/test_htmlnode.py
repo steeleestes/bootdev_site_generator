@@ -1,6 +1,6 @@
 import unittest
 
-from htmlnode import HTMLNode
+from htmlnode import HTMLNode, LeafNode
 
 class TestHTMLNode(unittest.TestCase):
 
@@ -49,8 +49,42 @@ class TestHTMLNode(unittest.TestCase):
         )
         self.assertEqual(
                 node.__repr__(),
-                "HTMLNode, TAG=div, VALUE=this is a value, CHILDREN=None, PROPS=None"
+                "HTMLNode: TAG=div, VALUE=this is a value, CHILDREN=None, PROPS=None"
+        )
+
+    def test_leaf_no_children(self):
+        node = LeafNode(
+            "p", #tag
+            "this is a paragraph", #value
+        )
+        self.assertEqual(
+            node.to_html(),
+            "<p>this is a paragraph</p>"
         )
         
+    def test_leaf_no_tag(self):
+        node = LeafNode(
+            None,
+            "no tag, still text"
+        )
+        self.assertEqual(
+            node.to_html(),
+            "no tag, still text"
+        )
+
+    def test_leaf_repr(self):
+        node = LeafNode(
+            "p", #tag
+            "test with text", #value
+        )
+        self.assertEqual(
+                node.__repr__(), 
+                "LeafNode: TAG=p, VALUE=test with text, PROPS=None"
+        )
+
+
+    def test_parent_single_child(self):
+        pass
+
 if __name__ == "__main__":
     unittest.main()
