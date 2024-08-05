@@ -1,6 +1,6 @@
 import unittest
 
-from htmlnode import HTMLNode, LeafNode
+from htmlnode import HTMLNode, ParentNode, LeafNode
 
 class TestHTMLNode(unittest.TestCase):
 
@@ -83,8 +83,32 @@ class TestHTMLNode(unittest.TestCase):
         )
 
 
-    def test_parent_single_child(self):
-        pass
+    def test_tohtml_one_child(self):
+        child_node = LeafNode("span", "child")
+        parent_node = ParentNode("div", [child_node])
+        self.assertEqual(
+                parent_node.to_html(), 
+                "<div><span>child</span></div>"
+        )
+
+    def test_tohtml_grandchild(self):
+        grandchild_node = LeafNode("b", "grandchild")
+        child_node = ParentNode("span", [grandchild_node])
+        parent_node = ParentNode("div", [child_node])
+        self.assertEqual(
+                parent_node.to_html(), 
+                "<div><span><b>grandchild</b></span></div>"
+        )
+
+    def test_tohtml_many_children(self):
+        child1 = LeafNode("p", "child1")
+        child2 = LeafNode("span", "child2 span")
+        child3 = LeafNode(None, "no tag text")
+        parent = ParentNode("div", [child1, child2, child3])
+        self.assertEqual(
+                parent.to_html(),
+                "<div><p>child1</p><span>child2 span</span>no tag text</div>"
+        )
 
 if __name__ == "__main__":
     unittest.main()
