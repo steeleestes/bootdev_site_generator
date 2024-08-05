@@ -2,11 +2,12 @@ import unittest
 
 from textnode import (
         TextNode,
+        text_node_to_html_node,
         text_type_text,
         text_type_bold,
         text_type_italic,
         text_type_code,
-        text_type_image,
+        text_type_img,
         text_type_link
 )
 
@@ -40,6 +41,38 @@ class TestTextNode(unittest.TestCase):
         node2 = TextNode("this is a text node", "bold", "url8")
         self.assertNotEqual(node, node2)
 
+class TestTextNodeToHtmlNode(unittest.TestCase):
+    def test_text_node(self):
+        node = TextNode("this is some text", text_type_text)
+        html_node = text_node_to_html_node(node)
+        self.assertEqual(html_node.tag, None)
+        self.assertEqual(html_node.value, "this is some text")
+
+    def test_image_node(self):
+        node = TextNode("this is img alt", text_type_img, "img.url.place")
+        html_node = text_node_to_html_node(node)
+        self.assertEqual(html_node.value, "")
+        self.assertEqual(html_node.tag, "img")
+        self.assertEqual(
+                html_node.props,
+                {"src":"img.url.place", "alt":"this is img alt"}
+        )
+
+    def test_emph_node(self):
+        node = TextNode("this is important", text_type_italic)
+        html_node = text_node_to_html_node(node)
+        self.assertEqual(html_node.tag, "i")
+        self.assertEqual(html_node.value, "this is important")
+
 
 if __name__ == "__main__":
     unittest.main()
+
+
+
+
+
+
+
+
+
